@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=400">
+  <title>360airo LinkedIn</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Main styles */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f8fafc;
+    }
+    
+    .container {
+      width: 380px;
+      max-height: 600px;
+      overflow-y: auto;
+      padding: 20px;
+    }
+    
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .logo {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 10px;
+    }
+    
+    h1 {
+      margin: 0 0 5px 0;
+      font-size: 20px;
+      color: #1e293b;
+      font-weight: 600;
+    }
+    
+    .subtitle {
+      margin: 0;
+      color: #64748b;
+      font-size: 14px;
+    }
+    
+    /* Accounts Section */
+    .section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .section h3 {
+      margin: 0 0 15px 0;
+      font-size: 16px;
+      color: #334155;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .accounts-container {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+    
+    /* Account Card - ENHANCED */
+    .account-card {
+      display: flex;
+      align-items: flex-start;
+      padding: 15px;
+      margin-bottom: 10px;
+      background: #f8fafc;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      position: relative;
+    }
+    
+    .account-card:hover {
+      border-color: #cbd5e1;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .account-card.active {
+      background: #e0e7ff;
+      border-color: #6366f1;
+    }
+    
+    .account-card.auto-detected {
+      border-left: 4px solid #10b981;
+    }
+    
+    .account-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 15px;
+      flex-shrink: 0;
+      overflow: hidden;
+      border: 2px solid white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    
+    .account-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .avatar-initials {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    
+    .account-details {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    /* Account Header with Badges */
+    .account-header {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+    
+    .account-name {
+      font-weight: 600;
+      font-size: 15px;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .account-badges {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    
+    .badge {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    
+    .badge.auth {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+    
+    .badge.auto {
+      background: #dbeafe;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+    }
+    
+    .badge.cookies {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+    
+    .badge.synced {
+      background: #f3e8ff;
+      color: #6b21a8;
+      border: 1px solid #e9d5ff;
+    }
+    
+    .account-headline {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 8px;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .account-info {
+      display: flex;
+      gap: 8px;
+      font-size: 12px;
+      color: #475569;
+      margin-bottom: 8px;
+    }
+    
+    .company, .location {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .company:before {
+      content: "💼";
+      font-size: 11px;
+    }
+    
+    .location:before {
+      content: "📍";
+      font-size: 11px;
+    }
+    
+    /* Account Details Row */
+    .account-details-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 6px;
+    }
+    
+    .detail {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: #f1f5f9;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    
+    .li-at-indicator {
+      font-size: 12px;
+      color: #10b981;
+    }
+    
+    .supabase-status {
+      font-size: 12px;
+      color: #6366f1;
+    }
+    
+    .account-status {
+      font-size: 12px;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      margin-top: 4px;
+    }
+    
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+    
+    .status-indicator.connected {
+      background: #10b981;
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    }
+    
+    .status-indicator.disconnected {
+      background: #ef4444;
+      box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+    }
+    
+    /* Account Actions - ENHANCED */
+    .account-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-left: 10px;
+      min-width: 80px;
+    }
+    
+    .btn-switch, .btn-sync, .btn-view, .btn-remove, .btn-action {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: none;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    
+    .btn-action.test-auth {
+      background: #f0f9ff;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+    }
+    
+    .btn-action.test-auth:hover {
+      background: #e0f2fe;
+      border-color: #7dd3fc;
+    }
+    
+    .btn-action.refresh {
+      background: #fefce8;
+      color: #ca8a04;
+      border: 1px solid #fef08a;
+    }
+    
+    .btn-action.refresh:hover {
+      background: #fef9c3;
+      border-color: #fde047;
+    }
+    
+    .btn-switch {
+      background: #6366f1;
+      color: white;
+      border: 1px solid #4f46e5;
+    }
+    
+    .btn-switch:hover {
+      background: #4f46e5;
+    }
+    
+    .btn-switch.active {
+      background: #10b981;
+      cursor: default;
+      border-color: #059669;
+    }
+    
+    .btn-sync {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .btn-sync:hover {
+      background: #e2e8f0;
+    }
+    
+    .btn-view {
+      background: #dbeafe;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+    
+    .btn-view:hover {
+      background: #bfdbfe;
+    }
+    
+    .btn-remove {
+      background: #fee2e2;
+      color: #dc2626;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #fecaca;
+    }
+    
+    .btn-remove:hover {
+      background: #fecaca;
+    }
+    
+    /* Account Quick Stats */
+    .account-quick-stats {
+      display: flex;
+      gap: 8px;
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 6px;
+    }
+    
+    .quick-stat {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      background: #f8fafc;
+      padding: 2px 6px;
+      border-radius: 8px;
+    }
+    
+    /* No Accounts State */
+    .no-accounts {
+      text-align: center;
+      padding: 40px 20px;
+      color: #64748b;
+    }
+    
+    .no-accounts-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+      opacity: 0.5;
+    }
+    
+    /* Connect New */
+    .connect-new-container {
+      margin: 20px 0;
+    }
+    
+    .connect-new-btn {
+      width: 100%;
+      padding: 14px;
+      background: white;
+      border: 2px dashed #cbd5e1;
+      border-radius: 10px;
+      color: #6366f1;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .connect-new-btn:hover {
+      background: #f8fafc;
+      border-color: #6366f1;
+      transform: translateY(-1px);
+    }
+    
+    /* Debug Tools Container */
+    .debug-tools-container {
+      margin: 15px 0;
+      padding: 15px;
+      background: #fefce8;
+      border: 1px solid #fef3c7;
+      border-radius: 10px;
+      text-align: center;
+    }
+    
+    .debug-tools-title {
+      font-size: 13px;
+      color: #92400e;
+      font-weight: 600;
+      margin: 0 0 10px 0;
+      text-align: center;
+    }
+    
+    .debug-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    
+    .debug-btn {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: none;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 40px;
+    }
+    
+    .debug-btn-cookies {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+    
+    .debug-btn-cookies:hover {
+      background: #fde68a;
+    }
+    
+    .debug-btn-connect {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+    
+    .debug-btn-connect:hover {
+      background: #a7f3d0;
+    }
+    
+    .debug-btn-icon {
+      font-size: 14px;
+    }
+    
+    .debug-btn-text {
+      font-size: 13px;
+      font-weight: 500;
+    }
+    
+    /* Actions */
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    
+    .btn {
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-primary {
+      background: #6366f1;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #4f46e5;
+      transform: translateY(-1px);
+    }
+    
+    .btn-secondary {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .btn-secondary:hover {
+      background: #e2e8f0;
+      transform: translateY(-1px);
+    }
+    
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+    
+    /* Dashboard Button */
+    .dashboard-container {
+      margin: 15px 0;
+    }
+    
+    .dashboard-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+    }
+    
+    .dashboard-btn:hover {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+    
+    /* Footer */
+    .footer {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e2e8f0;
+      text-align: center;
+      color: #64748b;
+      font-size: 12px;
+    }
+    
+    .version {
+      margin: 0 0 5px 0;
+    }
+    
+    .stats {
+      margin: 0;
+      font-weight: 500;
+    }
+    
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      left: 10px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      z-index: 1000;
+      animation: slideIn 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .notification.success {
+      background: #10b981;
+    }
+    
+    .notification.error {
+      background: #ef4444;
+    }
+    
+    .notification.info {
+      background: #3b82f6;
+    }
+    
+    .notification.warning {
+      background: #f59e0b;
+    }
+    
+    @keyframes slideIn {
+      from {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    /* Scrollbar */
+    .accounts-container::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .accounts-container::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 3px;
+    }
+    
+    .accounts-container::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+    
+    .accounts-container::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1001;
+      padding: 20px;
+    }
+    
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      width: 100%;
+      max-width: 350px;
+      animation: modalIn 0.3s ease;
+    }
+    
+    @keyframes modalIn {
+      from {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    
+    .modal-content h3 {
+      margin: 0 0 15px 0;
+      color: #1e293b;
+      font-size: 18px;
+    }
+    
+    .modal-content p {
+      margin: 0 0 20px 0;
+      color: #64748b;
+      line-height: 1.5;
+    }
+    
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .modal-actions .btn {
+      flex: 1;
+    }
+    
+    /* Quick Actions Bar */
+    .quick-actions {
+      display: flex;
+      gap: 8px;
+      margin: 15px 0;
+      padding: 12px;
+      background: white;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .quick-action-btn {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      color: #475569;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    
+    .quick-action-btn:hover {
+      background: #e2e8f0;
+      border-color: #cbd5e1;
+    }
+    
+    .quick-action-btn.primary {
+      background: #6366f1;
+      color: white;
+      border-color: #4f46e5;
+    }
+    
+    .quick-action-btn.primary:hover {
+      background: #4f46e5;
+    }
+    
+    /* Account Status Indicators */
+    .account-status-indicators {
+      display: flex;
+      gap: 4px;
+      margin-top: 8px;
+    }
+    
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    
+    .status-dot.li-at {
+      background: #10b981;
+    }
+    
+    .status-dot.cookies {
+      background: #f59e0b;
+    }
+    
+    .status-dot.synced {
+      background: #6366f1;
+    }
+    
+    .status-dot.active {
+      background: #8b5cf6;
+    }
+    
+    /* Tooltip */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .tooltip .tooltip-text {
+      visibility: hidden;
+      width: 200px;
+      background-color: #1e293b;
+      color: white;
+      text-align: center;
+      border-radius: 6px;
+      padding: 8px;
+      position: absolute;
+      z-index: 1002;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+    
+    /* Account Menu */
+    .account-menu {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      z-index: 100;
+      min-width: 120px;
+      display: none;
+    }
+    
+    .account-menu.show {
+      display: block;
+    }
+    
+    .menu-item {
+      padding: 8px 12px;
+      font-size: 12px;
+      color: #475569;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+    
+    .menu-item:hover {
+      background: #f1f5f9;
+    }
+    
+    .menu-item.danger {
+      color: #dc2626;
+    }
+    
+    /* Loading States */
+    .loading {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+    
+    .loading::after {
+      content: "";
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid #e2e8f0;
+      border-top-color: #6366f1;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-left: 8px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Empty State Animation */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <img src="icons/icon48.png" class="logo" alt="360airo">
+      <h1>360airo LinkedIn</h1>
+      <p class="subtitle">Smart Multi-Account Manager</p>
+      <div class="quick-actions">
+        <button class="quick-action-btn" id="refreshAllBtn">
+          <span>🔄</span>
+          <span>Refresh All</span>
+        </button>
+        <button class="quick-action-btn primary" id="autoDetectBtn">
+          <span>🔍</span>
+          <span>Auto Detect</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Connected Accounts -->
+    <div class="section">
+      <div class="section-header">
+        <h3>
+          <span>Connected Accounts</span>
+          <span id="accountCount" class="badge">0</span>
+        </h3>
+        <div class="account-status-indicators">
+          <div class="status-dot li-at tooltip" title="li_at cookie present"></div>
+          <div class="status-dot cookies tooltip" title="Cookies stored"></div>
+          <div class="status-dot synced tooltip" title="Synced to Supabase"></div>
+          <div class="status-dot active tooltip" title="Account active"></div>
+        </div>
+      </div>
+      
+      <div class="accounts-container" id="accountsContainer">
+        <div class="no-accounts" id="noAccounts">
+          <div class="no-accounts-icon">👤</div>
+          <p>No LinkedIn accounts connected</p>
+          <p style="font-size: 13px; margin-top: 8px;">Log into LinkedIn or click "Auto Detect" below</p>
+        </div>
+        <!-- Accounts will be dynamically inserted here -->
+      </div>
+    </div>
+
+    <!-- Connect New Account -->
+    <div class="connect-new-container">
+   <button class="connect-new-btn" id="connectNewBtn">
+    <span>+</span>
+    <span>Connect New LinkedIn Account</span>
+</button>
+    </div>
+
+    <!-- Debug Tools -->
+    <div class="debug-tools-container">
+      <div class="debug-tools-title">🔧 Advanced Tools</div>
+      <div class="debug-buttons">
+        <button id="debugCookiesBtn" class="debug-btn debug-btn-cookies tooltip" title="Check stored cookies status">
+          <span class="debug-btn-icon">🔍</span>
+          <span class="debug-btn-text">Cookie Debug</span>
+        </button>
+        <button id="forceConnectBtn" class="debug-btn debug-btn-connect tooltip" title="Force connect current session">
+          <span class="debug-btn-icon">🔗</span>
+          <span class="debug-btn-text">Force Connect</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button id="syncAllBtn" class="btn btn-secondary" disabled>
+        <span>🔄</span>
+        <span>Sync All to Supabase</span>
+      </button>
+      
+      <button id="testBtn" class="btn btn-secondary">
+        <span>🧪</span>
+        <span>Test Connection</span>
+      </button>
+    </div>
+
+    <!-- Dashboard Button -->
+    <div class="dashboard-container">
+      <button id="dashboardBtn" class="dashboard-btn">
+        <span>📊</span>
+        <span>Open Dashboard</span>
+      </button>
+    </div>
+
+    <!-- Footer Stats -->
+    <div class="footer">
+      <p class="version">v2.1.0 • 360airo LinkedIn Connector</p>
+      <p class="stats" id="accountStats">
+        <span id="totalAccounts">0</span> accounts • 
+        <span id="authenticatedAccounts">0</span> authenticated • 
+        <span id="syncedAccounts">0</span> synced • 
+        <span id="activeAccounts">0</span> active
+      </p>
+      <p style="font-size: 11px; color: #94a3b8; margin-top: 5px;">
+        Auto-detection: <span id="autoDetectionStatus">Active</span> • 
+        Last sync: <span id="lastSyncTime">Just now</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Account Menu Template -->
+  <template id="accountMenuTemplate">
+    <div class="account-menu">
+      <div class="menu-item" data-action="test">
+        <span>🔍</span>
+        <span>Test Auth</span>
+      </div>
+      <div class="menu-item" data-action="refresh">
+        <span>🔄</span>
+        <span>Refresh Cookies</span>
+      </div>
+      <div class="menu-item" data-action="sync">
+        <span>📤</span>
+        <span>Sync to Supabase</span>
+      </div>
+      <div class="menu-item" data-action="view">
+        <span>👁️</span>
+        <span>View Details</span>
+      </div>
+      <div class="menu-item danger" data-action="remove">
+        <span>✕</span>
+        <span>Remove Account</span>
+      </div>
+    </div>
+  </template>
+
+  <!-- Account Card Template -->
+  <template id="accountCardTemplate">
+    <div class="account-card" data-id="{id}">
+      <div class="account-avatar">
+        <div class="avatar-initials">{initials}</div>
+        <img src="{profileImage}" alt="{name}" style="display: none;">
+      </div>
+      <div class="account-details">
+        <div class="account-header">
+          <div class="account-name">
+            <span>{name}</span>
+            <div class="account-badges">
+              {badges}
+            </div>
+          </div>
+        </div>
+        {headline}
+        <div class="account-details-row">
+          {details}
+        </div>
+        <div class="account-quick-stats">
+          {stats}
+        </div>
+      </div>
+      <div class="account-actions">
+        <button class="btn-action test-auth" title="Test authentication">
+          🔍 Test
+        </button>
+        <button class="btn-action refresh" title="Refresh cookies">
+          🔄 Refresh
+        </button>
+        <button class="btn-switch {activeClass}" title="Toggle active status">
+          {activeIcon}
+        </button>
+        <button class="btn-remove" title="Remove account">
+          ✕
+        </button>
+      </div>
+    </div>
+  </template>
+
+  <script src="popup.js"></script>
+</body>
+</html>
