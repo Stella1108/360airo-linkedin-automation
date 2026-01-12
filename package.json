@@ -6,11 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "backend": "ts-node automation-server.ts",
-    "dev:backend": "nodemon --watch automation-server.ts --watch puppeteer-connector.ts --exec ts-node automation-server.ts",
-    "dev:all": "concurrently -n \"FRONTEND,BACKEND\" -c \"blue,green\" \"npm run dev\" \"npm run dev:backend\"",
-    "automation": "npx ts-node --project tsconfig.server.json automation-server.ts",
-    "automation:dev": "nodemon --exec \"npx ts-node --project tsconfig.server.json automation-server.ts\""
+    "server": "node server/puppeteer-server.js",
+    "dev:backend": "nodemon --watch server --exec \"npx tsx server/automation-server.ts\"",
+    "dev:all": "concurrently \"npm run dev\" \"npm run dev:backend\"",
+    "automation": "npx tsx server/automation-server.ts",
+    "automation:dev": "nodemon --watch server --exec \"npx tsx server/automation-server.ts\"",
+    "test": "npx tsx server/test-automation.ts",
+    "automation:js": "node server/automation-server.js"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.15",
@@ -27,12 +29,8 @@
     "express": "^5.2.1",
     "lucide-react": "^0.562.0",
     "next": "16.1.0",
-    "playwright": "^1.57.0",
-    "playwright-core": "^1.57.0",
-    "puppeteer": "^24.34.0",
-    "puppeteer-core": "^24.34.0",
+    "puppeteer": "^24.35.0",
     "puppeteer-extra": "^3.3.6",
-    "puppeteer-extra-plugin-recaptcha": "^3.6.8",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "random-useragent": "^0.5.0",
     "react": "19.2.3",
@@ -62,12 +60,18 @@
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
-  "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
+  "description": "LinkedIn Automation Dashboard with Next.js frontend and Express automation backend",
   "main": "postcss.config.js",
   "directories": {
     "lib": "lib"
   },
-  "keywords": [],
+  "keywords": [
+    "linkedin",
+    "automation",
+    "dashboard",
+    "puppeteer",
+    "nextjs"
+  ],
   "author": "",
   "license": "ISC"
 }

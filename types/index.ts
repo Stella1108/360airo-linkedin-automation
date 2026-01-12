@@ -1,32 +1,32 @@
-// src/types/index.ts - Add these interfaces
-
-export interface LinkedInSessionEncrypted {
-  id: number;
-  account_id: number;
-  li_at_cookie: string; // This is now the ENCRYPTED cookie
-  cookies_encrypted: string; // JSON string of all encrypted cookies
-  has_li_at: boolean;
-  is_active: boolean;
-  created_at: string;
-  installation_id: string;
-  browser_agent?: string;
-  last_used?: string;
-  cookie_count?: number;
-  li_at_length?: number;
-  li_at_preview?: string;
-  updated_at?: string;
+// types/index.ts
+export interface LinkedInAccountNew {
+  id: number
+  name: string
+  headline: string | null
+  is_active: boolean
+  has_li_at: boolean
+  profile_image_url: string | null
+  profile_url: string | null
+  last_synced: string | null
+  daily_limit: number
+  installation_id: string
+  dashboard_user_id: string
 }
 
-// Cookie interface
-export interface Cookie {
-  name: string;
-  value: string;
-  domain: string;
-  path: string;
-  secure: boolean;
-  httpOnly: boolean;
-  sameSite?: string;
-  expirationDate?: number;
-  session?: boolean;
-  storeId?: string;
+export interface LinkedInSession {
+  id: number
+  account_id: number
+  li_at_cookie: string
+  has_li_at: boolean
+  is_active: boolean
+  created_at: string
+  installation_id: string
+  browser_agent?: string
+}
+
+export interface ProfileToConnect {
+  id: string
+  name: string
+  linkedin_profile_url: string
+  headline?: string
 }

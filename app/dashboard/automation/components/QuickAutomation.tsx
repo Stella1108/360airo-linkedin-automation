@@ -6,10 +6,9 @@ import { supabase } from '@/lib/supabase'
 import toast from 'react-hot-toast'
 import {
   Users, Send, Clock, CheckCircle, Loader2,
-  ExternalLink, Target, AlertTriangle, Play, Globe,
-  XCircle, ChevronDown, ChevronUp, Filter, RefreshCw,
-  Database, Eye, CheckCheck, Mail, Chrome, MoveRight,
-  MousePointer, Search, Zap, Server
+  ExternalLink, Target, AlertTriangle, Zap,
+  XCircle, ChevronDown, ChevronUp, RefreshCw,
+  Database, Server
 } from 'lucide-react'
 
 interface QuickAutomationProps {
@@ -58,9 +57,6 @@ interface AutomationLog {
   completed_at?: string
 }
 
-// Use Next.js API route instead of separate server
-const API_BASE_URL = typeof window !== 'undefined' ? window.location.origin : ''
-
 export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationProps) {
   const [accounts, setAccounts] = useState<LinkedInAccountNew[]>([])
   const [sessions, setSessions] = useState<Record<number, LinkedInSession>>({})
@@ -69,7 +65,6 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
   const [selectedProfiles, setSelectedProfiles] = useState<ProfileToConnect[]>([])
   const [automationLogs, setAutomationLogs] = useState<AutomationLog[]>([])
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false)
-  const [connectionNote, setConnectionNote] = useState('Hi, I\'d like to connect with you.')
   const [searchTerm, setSearchTerm] = useState('')
   
   const [activeAutomation, setActiveAutomation] = useState<{
@@ -110,7 +105,7 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
     ])
   }
 
-  // Check server status (now checks Next.js API)
+  // Check server status
   const checkServerStatus = async () => {
     setServerStatus(prev => ({ ...prev, loading: true }))
     try {
@@ -380,7 +375,7 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
     }
   }
 
-  // NEW: Call Next.js API for automation
+  // Call Next.js API for automation
   const startApiAutomation = async (
     account: LinkedInAccountNew,
     session: LinkedInSession,
@@ -406,7 +401,7 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
         currentStep: `Connecting to ${log.profile_name}...`
       }))
 
-      // Call Next.js API route instead of Express server
+      // Call Next.js API route
       console.log('Calling Next.js automation API...')
       const response = await fetch('/api/automation', {
         method: 'POST',
@@ -414,8 +409,7 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
         body: JSON.stringify({
           account_id: account.id,
           profile_url: log.profile_url,
-          connection_note: connectionNote
-          // li_at_cookie is automatically fetched by the API from sessions table
+          connection_note: 'Hi, I\'d like to connect with you.'
         })
       })
 
@@ -601,10 +595,10 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
           <div>
             <h1 className="text-2xl font-bold mb-2 flex items-center gap-2">
               <Zap className="h-6 w-6 text-yellow-500" />
-              LinkedIn Automation (Integrated API)
+              LinkedIn Automation
             </h1>
             <p className="text-gray-600">
-              Uses built-in Next.js API - No separate server needed!
+              Send connection requests automatically using LinkedIn accounts
             </p>
           </div>
           
@@ -668,33 +662,6 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
             </div>
           </div>
         )}
-        
-        {/* Benefits Section */}
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-            <div className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-green-600" />
-              <span className="font-medium text-green-800">No Separate Server</span>
-            </div>
-            <p className="text-sm text-green-700 mt-1">Uses built-in Next.js API routes</p>
-          </div>
-          
-          <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <div className="flex items-center gap-2">
-              <Database className="h-5 w-5 text-blue-600" />
-              <span className="font-medium text-blue-800">Automatic Cookies</span>
-            </div>
-            <p className="text-sm text-blue-700 mt-1">Fetches LinkedIn cookies from database</p>
-          </div>
-          
-          <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
-            <div className="flex items-center gap-2">
-              <Server className="h-5 w-5 text-purple-600" />
-              <span className="font-medium text-purple-800">Deploy Anywhere</span>
-            </div>
-            <p className="text-sm text-purple-700 mt-1">Works on Vercel, Netlify, etc.</p>
-          </div>
-        </div>
       </div>
 
       {/* Stats */}
@@ -705,7 +672,7 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
               <Target className="h-6 w-6 text-blue-600" />
             </div>
             <div>
-              <div className="text-sm text-gray-600">Selected</div>
+              <div className="text-sm text-gray-600">Selected Profiles</div>
               <div className="text-2xl font-bold">{selectedProfiles.length}</div>
             </div>
           </div>
@@ -717,7 +684,7 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
               <Database className="h-6 w-6 text-green-600" />
             </div>
             <div>
-              <div className="text-sm text-gray-600">Cookie Ready</div>
+              <div className="text-sm text-gray-600">Cookie Status</div>
               <div className="text-2xl font-bold">
                 {safeGetSession?.li_at_cookie ? '✅' : '❌'}
               </div>
@@ -731,8 +698,8 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
               <Send className="h-6 w-6 text-purple-600" />
             </div>
             <div>
-              <div className="text-sm text-gray-600">Automation Type</div>
-              <div className="text-xl font-bold text-purple-600">API Based</div>
+              <div className="text-sm text-gray-600">Connection Type</div>
+              <div className="text-xl font-bold text-purple-600">Direct Connect</div>
             </div>
           </div>
         </div>
@@ -794,7 +761,7 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
                           <div>
                             <div className="font-medium">{safeGetAccountData?.name}</div>
                             <div className="text-sm text-gray-600">
-                              {safeGetSession?.li_at_cookie ? '✅ Ready for automation' : '❌ Needs cookie'}
+                              {safeGetSession?.li_at_cookie ? '✅ Ready for automation' : '❌ Needs LinkedIn cookie'}
                             </div>
                           </div>
                         </>
@@ -871,11 +838,6 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
                               No LinkedIn Cookie
                             </span>
                           )}
-                          
-                          <span className="px-2 py-1 rounded text-xs bg-purple-100 text-purple-800 flex items-center gap-1">
-                            <Server className="h-3 w-3" />
-                            Next.js API Automation
-                          </span>
                         </div>
                       </div>
                     </div>
@@ -894,31 +856,13 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
             )}
           </div>
 
-          {/* Connection Message */}
-          <div className="bg-white rounded-xl shadow p-6">
-            <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-              <Mail className="h-5 w-5 text-green-600" />
-              Connection Message
-            </h2>
-            <textarea
-              value={connectionNote}
-              onChange={(e) => setConnectionNote(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 resize-none"
-              rows={3}
-              placeholder="Hi, I'd like to connect with you..."
-            />
-            <p className="text-sm text-gray-500 mt-2">
-              This message will be sent with connection requests
-            </p>
-          </div>
-
           {/* Profiles Selection */}
           <div className="bg-white rounded-xl shadow p-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
                 <h2 className="text-xl font-bold flex items-center gap-2">
                   <Target className="h-5 w-5 text-purple-600" />
-                  Select Profiles
+                  Select Profiles to Connect
                 </h2>
                 <p className="text-sm text-gray-600">
                   {selectedProfiles.length} selected • {availableProfiles.length} available
@@ -951,10 +895,10 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search profiles..."
+                  placeholder="Search profiles by name or headline..."
                   className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                 />
-                <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <RefreshCw className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
               </div>
             </div>
 
@@ -981,12 +925,13 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
                       onClick={() => toggleProfileSelection(profile)}
                     >
                       <div className="flex items-start gap-3">
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          onChange={() => {}}
-                          className="h-4 w-4 text-blue-600 rounded mt-1"
-                        />
+                        <div className={`h-5 w-5 rounded border flex items-center justify-center ${
+                          isSelected ? 'bg-blue-600 border-blue-600' : 'border-gray-300'
+                        }`}>
+                          {isSelected && (
+                            <CheckCircle className="h-3 w-3 text-white" />
+                          )}
+                        </div>
                         <div className="flex-1">
                           <div className="flex justify-between">
                             <div>
@@ -1017,7 +962,7 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
         <div className="space-y-6">
           {/* Start Automation */}
           <div className="bg-white rounded-xl shadow p-6">
-            <h2 className="text-xl font-bold mb-4">Start Automation</h2>
+            <h2 className="text-xl font-bold mb-4">Start Connection Automation</h2>
             
             <button
               onClick={startBrowserAutomation}
@@ -1058,7 +1003,7 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
                 <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
                   <p className="text-sm text-red-700 flex items-center gap-2">
                     <XCircle className="h-4 w-4 flex-shrink-0" />
-                    <span>Automation API is offline. Refresh page.</span>
+                    <span>Automation API is offline. Please refresh the page.</span>
                   </p>
                 </div>
               )}
@@ -1067,7 +1012,7 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
                 <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
                   <p className="text-sm text-red-700 flex items-center gap-2">
                     <AlertTriangle className="h-4 w-4 flex-shrink-0" />
-                    <span>Account needs LinkedIn cookie</span>
+                    <span>Account needs LinkedIn cookie for automation</span>
                   </p>
                 </div>
               )}
@@ -1076,7 +1021,7 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
                 <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
                   <p className="text-sm text-blue-700">
                     <span className="font-semibold">{selectedProfiles.length} profile{selectedProfiles.length !== 1 ? 's' : ''}</span> selected.
-                    Will send connections via Next.js API.
+                    Each connection will include a default invitation note.
                   </p>
                 </div>
               )}
@@ -1086,12 +1031,12 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
             <div className="mt-6 p-4 bg-gray-50 rounded-lg">
               <h4 className="font-medium mb-2 flex items-center gap-2">
                 <Server className="h-4 w-4 text-purple-600" />
-                Next.js API Automation Flow:
+                Automation Flow:
               </h4>
               <ol className="text-sm text-gray-600 space-y-2">
                 <li className="flex items-start gap-2">
                   <span className="font-semibold text-purple-600">1.</span>
-                  <span>Calls <code>/api/automation</code> endpoint</span>
+                  <span>Calls Next.js <code>/api/automation</code> endpoint</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="font-semibold text-purple-600">2.</span>
@@ -1099,11 +1044,11 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="font-semibold text-purple-600">3.</span>
-                  <span>Opens browser and logs into LinkedIn</span>
+                  <span>Automates LinkedIn connection requests</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="font-semibold text-purple-600">4.</span>
-                  <span>Sends connection request</span>
+                  <span>30-second delay between connections</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="font-semibold text-purple-600">5.</span>
@@ -1119,21 +1064,25 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
               <h2 className="text-xl font-bold">Recent Activity</h2>
               <button
                 onClick={fetchAutomationLogs}
-                className="text-sm text-blue-600 hover:text-blue-800"
+                className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1"
               >
-                <RefreshCw className="h-4 w-4 inline mr-1" />
+                <RefreshCw className="h-4 w-4" />
                 Refresh
               </button>
             </div>
             
             <div className="space-y-3">
-              {automationLogs.length === 0 ? (
-                <div className="text-center py-4 text-gray-500">
+              {loading.logs ? (
+                <div className="flex items-center justify-center p-4">
+                  <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
+                </div>
+              ) : automationLogs.length === 0 ? (
+                <div className="text-center py-8 text-gray-500">
                   No automation activity yet
                 </div>
               ) : (
                 automationLogs.slice(0, 5).map(log => (
-                  <div key={log.id} className="p-3 border rounded-lg">
+                  <div key={log.id} className="p-3 border rounded-lg hover:bg-gray-50">
                     <div className="flex justify-between items-start mb-2">
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-sm truncate">{log.profile_name}</p>
@@ -1141,7 +1090,7 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
                           {new Date(log.created_at).toLocaleTimeString()}
                         </p>
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs ${
+                      <span className={`px-2 py-1 rounded text-xs whitespace-nowrap ${
                         log.status === 'sent' ? 'bg-green-100 text-green-800' :
                         log.status === 'failed' ? 'bg-red-100 text-red-800' :
                         'bg-blue-100 text-blue-800'
@@ -1149,6 +1098,11 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
                         {log.status}
                       </span>
                     </div>
+                    {log.error_message && (
+                      <p className="text-xs text-red-600 mt-1 truncate">
+                        {log.error_message}
+                      </p>
+                    )}
                   </div>
                 ))
               )}
@@ -1159,52 +1113,48 @@ export default function QuickAutomation({ onWorkflowCreated }: QuickAutomationPr
 
       {/* How It Works Section */}
       <div className="bg-white rounded-xl shadow p-6">
-        <h3 className="font-bold text-lg mb-4">Integrated Next.js API Automation</h3>
+        <h3 className="font-bold text-lg mb-4">How It Works</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="text-center">
             <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Server className="w-8 h-8 text-blue-600" />
+              <Users className="w-8 h-8 text-blue-600" />
             </div>
-            <h4 className="font-semibold mb-2">1. Next.js API Route</h4>
-            <p className="text-sm text-gray-600">Uses built-in <code>/api/automation</code> endpoint</p>
+            <h4 className="font-semibold mb-2">1. Select Account</h4>
+            <p className="text-sm text-gray-600">Choose a LinkedIn account with valid cookie</p>
           </div>
           
           <div className="text-center">
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Database className="w-8 h-8 text-green-600" />
+              <Target className="w-8 h-8 text-green-600" />
             </div>
-            <h4 className="font-semibold mb-2">2. Database Integration</h4>
-            <p className="text-sm text-gray-600">Fetches cookies and stores logs in Supabase</p>
+            <h4 className="font-semibold mb-2">2. Choose Profiles</h4>
+            <p className="text-sm text-gray-600">Select profiles to send connection requests</p>
           </div>
           
           <div className="text-center">
             <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Send className="w-8 h-8 text-purple-600" />
             </div>
-            <h4 className="font-semibold mb-2">3. Auto Connection</h4>
-            <p className="text-sm text-gray-600">Sends LinkedIn connection requests automatically</p>
+            <h4 className="font-semibold mb-2">3. Auto Connect</h4>
+            <p className="text-sm text-gray-600">Automatically sends LinkedIn connection requests</p>
           </div>
         </div>
         
-        {/* Deployment Info */}
+        {/* Requirements Info */}
         <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-          <h4 className="font-medium mb-2">🚀 Deployment Ready:</h4>
+          <h4 className="font-medium mb-2">⚠️ Requirements:</h4>
           <ul className="text-sm text-gray-600 space-y-2">
             <li className="flex items-start gap-2">
-              <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
-              <span><strong>No separate server</strong> - Everything runs in Next.js</span>
+              <Database className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5" />
+              <span><strong>LinkedIn cookie (li_at)</strong> must be available in sessions table</span>
             </li>
             <li className="flex items-start gap-2">
-              <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
-              <span><strong>Works on Vercel</strong> - Deploy with <code>vercel deploy</code></span>
+              <Server className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
+              <span><strong>Next.js API route</strong> must be properly configured at <code>/api/automation</code></span>
             </li>
             <li className="flex items-start gap-2">
-              <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
-              <span><strong>Serverless functions</strong> - Scales automatically</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
-              <span><strong>Built-in authentication</strong> - Uses Next.js middleware</span>
+              <Clock className="h-4 w-4 text-orange-600 flex-shrink-0 mt-0.5" />
+              <span><strong>30-second delay</strong> between connections to avoid rate limiting</span>
             </li>
           </ul>
         </div>
